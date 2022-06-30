@@ -9,9 +9,22 @@ namespace Client_Assertion_App
     {
         static void Main(string[] args)
         {
-            var CertificateName = "CN=DaemonConsoleCert";
-            var tenantId = "fbfaa8eb-7973-4ed4-ab2d-41938712c70f";
-            var ConfidentialClientID = "57db9c3f-a4e4-421f-a380-eb8beef923a1";
+            Console.WriteLine("Program with Client Assertion");
+            Console.WriteLine("-----------------------------");
+            Console.WriteLine();
+
+            //var CertificateName = Console.ReadLine();
+            //var tenantId = "00000000-0000-0000-0000-000000000000";
+            //var ConfidentialClientID = "00000000-0000-0000-0000-000000000000";
+
+            Console.Write("Enter Certificate Name (Example: CN=DaemonConsoleCert): ");
+            var CertificateName = Console.ReadLine();
+
+            Console.Write("Enter Tenant Id: ");
+            var tenantId = Console.ReadLine();
+            
+            Console.Write("Enter Client Id: ");
+            var ConfidentialClientID = Console.ReadLine();
 
             X509Certificate2 certificate = ReadCertificate(CertificateName);
             string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, ConfidentialClientID);
@@ -23,10 +36,9 @@ namespace Client_Assertion_App
                 .WithClientAssertion(signedClientAssertion)
                 .Build();
 
-            Console.WriteLine("Program with Client Assertion");
-            Console.WriteLine("-----------------------------");
             Console.WriteLine();
-            Console.WriteLine("Client Assertion: {0}", signedClientAssertion);
+            Console.WriteLine("Client Assertion:");
+            Console.WriteLine(signedClientAssertion);
             Console.ReadLine();
         }
 
