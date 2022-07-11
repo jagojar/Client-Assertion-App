@@ -1,12 +1,7 @@
 {
   "profiles": {
     "Client-Assertion-Func-App": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "AZURE_CLIENT_SECRET": "\"jmc8Q~DPIEJ5aT8IghbZYdaiOVxyLzQ6AGnLic5y\"",
-        "AZURE_CLIENT_ID": "\"2fe91b36-a562-4b08-938c-59eeceb73520\"",
-        "AZURE_TENANT_ID": "\"72f988bf-86f1-41af-91ab-2d7cd011db47\""
-      }
+      "commandName": "Project"
     }
   }
 }

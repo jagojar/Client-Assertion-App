@@ -24,11 +24,11 @@ namespace Client_Assertion_Func_App
             string certificateName = "";
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            keyVaultUrl = keyVaultUrl ?? data?.keyVaultUrl;
-            tenantId = tenantId ?? data?.tenantId;
-            confidentialClientID = confidentialClientID ?? data?.confidentialClientID;
-            certificateName = certificateName ?? data?.certificateName;
+            ClientDto data = JsonConvert.DeserializeObject<ClientDto>(requestBody);
+            keyVaultUrl = data.keyVaultUrl;
+            tenantId = data.tenantId;
+            confidentialClientID = data.confidentialClientID;
+            certificateName = data.certificateName;
 
             X509Certificate2 certificate = ClientAssertionHelper.ReadCertificateFromKeyVault(keyVaultUrl, certificateName);
             string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, confidentialClientID);
