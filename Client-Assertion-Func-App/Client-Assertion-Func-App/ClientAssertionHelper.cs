@@ -1,9 +1,12 @@
 ﻿using Azure.Identity;
 using Azure.Security.KeyVault.Certificates;
+using Azure.Security.KeyVault.Secrets;
+using Client_Assertion_App;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -134,12 +137,28 @@ namespace Client_Assertion_Func_App
 
         public static X509Certificate2 ReadCertificateFromKeyVault(string vaultUrl, string certificateName)
         {
-            var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+            var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());                 
 
+            //Get certificate
             KeyVaultCertificateWithPolicy certificateWithPolicy = client.GetCertificate(certificateName);
-            X509Certificate2 certificate = new X509Certificate2(certificateWithPolicy.Cer);
 
-            return certificate;
-        }
+            if(certificateWithPolicy.Policy?.Exportable== true) // && certificateWithPolicy.Policy?.CertificateType == CertificateKeyType.Rsa)
+            {
+                string secretName = CertificateHelper.ParseSecretName(certificateWithPolicy.SecretId);
+
+                var secretClient = new SecretClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());
+
+                //Get secret 'managed by Azure' contains private key
+                KeyVaultSecret secret = secretClient.GetSecret(secretName);
+
+                // Get a certificate pair from the secret value.
+                X509Certificate2 pfx = CertificateHelper.ParseCertificate(secret);
+                return pfx;
+            }
+            else
+            {
+                throw new InvalidDataException("Certificate private key is not exportable");
+            }            
+        }        
     }
 }

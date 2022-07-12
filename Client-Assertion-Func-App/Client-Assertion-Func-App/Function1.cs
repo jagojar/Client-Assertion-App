@@ -18,38 +18,37 @@ namespace Client_Assertion_Func_App
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            string keyVaultUrl = "";
-            string tenantId = "";
-            string confidentialClientID = "";
-            string certificateName = "";
+            string responseMessage = "";
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            ClientDto data = JsonConvert.DeserializeObject<ClientDto>(requestBody);
-            keyVaultUrl = data.keyVaultUrl;
-            tenantId = data.tenantId;
-            confidentialClientID = data.confidentialClientID;
-            certificateName = data.certificateName;
+            try
+            {
+                log.LogInformation("C# HTTP trigger function starting...");
+                
 
-            X509Certificate2 certificate = ClientAssertionHelper.ReadCertificateFromKeyVault(keyVaultUrl, certificateName);
-            string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, confidentialClientID);
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                ClientDto data = JsonConvert.DeserializeObject<ClientDto>(requestBody);
+                string keyVaultUrl = data.keyVaultUrl;
+                string tenantId = data.tenantId;
+                string confidentialClientID = data.confidentialClientID;
+                string certificateName = data.certificateName;
 
+                log.LogInformation("Body request processed...");
 
-            //log.LogInformation("C# HTTP trigger function processed a request.");
+                X509Certificate2 certificate = ClientAssertionHelper.ReadCertificateFromKeyVault(keyVaultUrl, certificateName);
+                log.LogInformation("Certificate retrieved from key vault {keyVaultUrl}...", keyVaultUrl);
 
-            //string name = req.Query["name"];
+                string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, confidentialClientID);
+                log.LogInformation("Client assertion generated");
 
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
+                responseMessage = "Client Assertion: " + signedClientAssertion;
 
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ex.Message;
+            }
 
-            string responseMessage = string.IsNullOrEmpty(keyVaultUrl)
-                ? "keyVaultUrl not provided"
-                : "Client Assertion: " + signedClientAssertion;
-
+            
             return new OkObjectResult(responseMessage);
         }
     }
