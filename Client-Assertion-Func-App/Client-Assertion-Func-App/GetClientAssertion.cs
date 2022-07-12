@@ -11,9 +11,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Client_Assertion_Func_App
 {
-    public static class Function1
+    public static class GetClientAssertion
     {
-        [FunctionName("Function1")]
+        [FunctionName("GetClientAssertion")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
