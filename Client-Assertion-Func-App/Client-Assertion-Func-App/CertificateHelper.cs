@@ -1,5 +1,6 @@
 ﻿using Azure.Security.KeyVault.Certificates;
 using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace Client_Assertion_App
 {
     public class CertificateHelper
     {
-        public static X509Certificate2 ParseCertificate(KeyVaultSecret secret)
+        public static X509Certificate2 ParseCertificate(KeyVaultSecret secret, ILogger log)
         {
             if (string.Equals(secret.Properties.ContentType, CertificateContentType.Pkcs12.ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
@@ -30,6 +31,9 @@ namespace Client_Assertion_App
                 StringBuilder currentKeyBuilder = null;
 
                 string line = reader.ReadLine();
+
+                log.LogInformation(" reader.ReadLine() completed");
+
                 while (line != null)
                 {
                     if (line.Equals("-----BEGIN PRIVATE KEY-----", StringComparison.OrdinalIgnoreCase))
@@ -56,6 +60,8 @@ namespace Client_Assertion_App
                     line = reader.ReadLine();
                 }
 
+                log.LogInformation(" while line completed");
+
                 string privateKeyBase64 = privateKeyBuilder?.ToString() ?? throw new InvalidOperationException("No private key found in certificate.");
                 string publicKeyBase64 = publicKeyBuilder?.ToString() ?? throw new InvalidOperationException("No public key found in certificate.");
 
@@ -64,8 +70,13 @@ namespace Client_Assertion_App
 
                 X509Certificate2 certificate = new X509Certificate2(publicKey);
 
+                log.LogInformation("certificate completed");
+
                 using RSA rsa = RSA.Create();
+                log.LogInformation("RSA.Create() completed");
+
                 rsa.ImportPkcs8PrivateKey(privateKey, out _);
+                log.LogInformation("rsa.ImportPkcs8PrivateKey completed");
 
                 return certificate.CopyWithPrivateKey(rsa);
             }

@@ -34,7 +34,7 @@ namespace Client_Assertion_Func_App
 
                 log.LogInformation("Body request processed...");
 
-                X509Certificate2 certificate = ClientAssertionHelper.ReadCertificateFromKeyVault(keyVaultUrl, certificateName);
+                X509Certificate2 certificate = ClientAssertionHelper.ReadCertificateFromKeyVault(keyVaultUrl, certificateName, log);
                 log.LogInformation("Certificate retrieved from key vault {keyVaultUrl}...", keyVaultUrl);
 
                 string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, confidentialClientID);

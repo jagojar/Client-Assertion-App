@@ -2,6 +2,7 @@
 using Azure.Security.KeyVault.Certificates;
 using Azure.Security.KeyVault.Secrets;
 using Client_Assertion_App;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -135,14 +136,21 @@ namespace Client_Assertion_Func_App
             return cert;
         }
 
-        public static X509Certificate2 ReadCertificateFromKeyVault(string vaultUrl, string certificateName)
+        public static X509Certificate2 ReadCertificateFromKeyVault(string vaultUrl, string certificateName, ILogger log)
         {
-            var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: new DefaultAzureCredential());                 
+            //var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+            var credential = new DefaultAzureCredential();            
+
+            var client = new CertificateClient(vaultUri: new Uri(vaultUrl), credential: credential);
+
+            log.LogInformation("CertificateClient completed");
 
             //Get certificate
             KeyVaultCertificateWithPolicy certificateWithPolicy = client.GetCertificate(certificateName);
 
-            if(certificateWithPolicy.Policy?.Exportable== true) // && certificateWithPolicy.Policy?.CertificateType == CertificateKeyType.Rsa)
+            log.LogInformation("GetCertificate completed");
+
+            if (certificateWithPolicy.Policy?.Exportable== true) // && certificateWithPolicy.Policy?.CertificateType == CertificateKeyType.Rsa)
             {
                 string secretName = CertificateHelper.ParseSecretName(certificateWithPolicy.SecretId);
 
@@ -151,8 +159,12 @@ namespace Client_Assertion_Func_App
                 //Get secret 'managed by Azure' contains private key
                 KeyVaultSecret secret = secretClient.GetSecret(secretName);
 
+                log.LogInformation("GetSecret completed. Value: " + secret.Value);
+
                 // Get a certificate pair from the secret value.
-                X509Certificate2 pfx = CertificateHelper.ParseCertificate(secret);
+                X509Certificate2 pfx = CertificateHelper.ParseCertificate(secret, log);
+
+                log.LogInformation("ParseCertificate completed");
                 return pfx;
             }
             else
