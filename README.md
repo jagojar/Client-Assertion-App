@@ -7,10 +7,19 @@ Based in the docs:
 
 Java example [link](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-java-token-cache-serialization)
 
-Install app to generate assertion:
+## Install app to generate assertion:
 
 1. Install .net core 3.1 [Windows](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-3.1.26-windows-x64-installer) or [MacOS](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-3.1.26-macos-x64-installer)
 
 2. Download app folder from [app](https://github.com/jagojar/Client-Assertion-App/tree/master/app)
 
 3. Run Client-Assertion-App.exe
+
+## When running the app in IIS: 
+1. application pool instance
+2. Click advanced settings
+3. Under Process model, set Load User Profile to true.
+
+## When running in Azure Web App:
+1. Go to Configuration > Application Settings 
+2. Add variable WEBSITE_LOAD_USER_PROFILE = 1.
