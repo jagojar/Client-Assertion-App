@@ -1,9 +1,9 @@
 # Client-Assertion-App
 
 Based in the docs:
-[https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-net-client-assertions](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-net-client-assertions)
+* [msal-net-client-assertions](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-net-client-assertions)
 
-[https://docs.microsoft.com/en-us/samples/azure/azure-sdk-for-net/get-certificate-private-key](https://docs.microsoft.com/en-us/samples/azure/azure-sdk-for-net/get-certificate-private-key/)
+* [get-certificate-private-key](https://docs.microsoft.com/en-us/samples/azure/azure-sdk-for-net/get-certificate-private-key/)
 
 Java example [link](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-java-token-cache-serialization)
 
