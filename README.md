@@ -32,7 +32,7 @@ Java example [link](https://docs.microsoft.com/en-us/azure/active-directory/deve
 ```
 az functionapp deployment source config-zip -g <resource_group> -n <app_name> --src <zip_file_path>
 ```
-3. Test the app with the endpoint:
+4. Test the app with the endpoint:
 Post https://{your-func-app-name}.azurewebsites.net/api/GetClientAssertion?code={youraccesscode}
 Request Body example
 ```json
