@@ -29,6 +29,7 @@ namespace Client_Assertion_Func_App
                 ClientDto data = JsonConvert.DeserializeObject<ClientDto>(requestBody);
                 string keyVaultUrl = data.keyVaultUrl;
                 string tenantId = data.tenantId;
+                string aud = data.aud;
                 string confidentialClientID = data.confidentialClientID;
                 string certificateName = data.certificateName;
 
@@ -37,7 +38,7 @@ namespace Client_Assertion_Func_App
                 X509Certificate2 certificate = ClientAssertionHelper.ReadCertificateFromKeyVault(keyVaultUrl, certificateName, log);
                 log.LogInformation("Certificate retrieved from key vault {keyVaultUrl}...", keyVaultUrl);
 
-                string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, confidentialClientID);
+                string signedClientAssertion = ClientAssertionHelper.GetSignedClientAssertion(certificate, tenantId, aud,confidentialClientID);
                 log.LogInformation("Client assertion generated");
 
                 responseMessage = "Client Assertion: " + signedClientAssertion;

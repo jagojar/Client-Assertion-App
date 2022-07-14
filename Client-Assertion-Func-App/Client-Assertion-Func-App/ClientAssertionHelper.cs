@@ -18,10 +18,9 @@ namespace Client_Assertion_Func_App
 {
     public class ClientAssertionHelper
     {
-        private static IDictionary<string, object> GetClaims(string tenantId, string clientId)
-        {
-            //aud = https://login.microsoftonline.com/ + Tenant ID + /v2.0
-            string aud = $"https://login.microsoftonline.com/{tenantId}/v2.0";
+        private static IDictionary<string, object> GetClaims(string tenantId, string clientId, string aud)
+        {            
+            //string aud = $"https://login.microsoftonline.com/{tenantId}/v2.0";
 
             string ConfidentialClientID = clientId; //client id 00000000-0000-0000-0000-000000000000
             const uint JwtToAadLifetimeInSeconds = 60 * 10; // Ten minutes
@@ -56,7 +55,7 @@ namespace Client_Assertion_Func_App
             return s;
         }
 
-        public static string GetSignedClientAssertion(X509Certificate2 certificate, string tenantId, string clientId)
+        public static string GetSignedClientAssertion(X509Certificate2 certificate, string tenantId, string aud, string clientId)
         {
             // Get the RSA with the private key, used for signing.
             var rsa = certificate.GetRSAPrivateKey();
@@ -71,7 +70,7 @@ namespace Client_Assertion_Func_App
             };
 
             //Please see the previous code snippet on how to craft claims for the GetClaims() method
-            var claims = GetClaims(tenantId, clientId);
+            var claims = GetClaims(tenantId, clientId, aud);
 
             var headerBytes = JsonSerializer.SerializeToUtf8Bytes(header);
             var claimsBytes = JsonSerializer.SerializeToUtf8Bytes(claims);

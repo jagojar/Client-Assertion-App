@@ -8,6 +8,7 @@ namespace Client_Assertion_Func_App
     {
         public string keyVaultUrl { get; set; }
         public string tenantId { get; set; }
+        public string aud { get; set; }
         public string confidentialClientID { get; set; }
         public string certificateName { get; set; }
     }
