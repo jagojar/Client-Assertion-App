@@ -38,7 +38,7 @@ Request Body example
 {
 	"keyVaultUrl":"https://kv-name.vault.azure.net",
 	"tenantId":"xxxx",
-	"aud":"api://xxxx"
+	"aud":"api://xxxx",
 	"confidentialClientID":"xxxx",
 	"certificateName":"exampleCert"
 }
