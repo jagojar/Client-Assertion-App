@@ -25,7 +25,8 @@ Java example [link](https://docs.microsoft.com/en-us/azure/active-directory/deve
 ## Azure Function App
 1. Publish function to publish folder [guide](https://docs.microsoft.com/en-us/visualstudio/deployment/quickstart-deploy-aspnet-web-app?view=vs-2022&tabs=folder)
 2. Create zip with the content of the publish folder
-3. Deploy func app with zip with the Azure Cli command:
+3. Deploy func app with zip with the Azure Cli command below.
+Alternative: use the last zip from [releases-func](https://github.com/jagojar/Client-Assertion-App/tree/master/releases-func) folder
 
 ```
 az functionapp deployment source config-zip -g <resource_group> -n <app_name> --src <zip_file_path>
